@@ -1,41 +1,55 @@
 CC = gcc
 CXX = g++
 
-CFLAGS = -Wall -Wextra -g
-CXXFLAGS = -std=c++20 -Wall -Wextra -g
+CFLAGS=-Wall -Werror
+CXXFLAGS = -std=c++20 -Wall -Wextra
 LDFLAGS = -lm
 
 GTEST_LIB = -lgtest -lgtest_main -pthread
 
-all: main
+DEBUG ?= 1
+ifeq ($(DEBUG), 1)
+    CFLAGS += -g
+    CXXFLAGS += -g
+    OUTPUTDIR = bin/debug
+else
+    CFLAGS += -O3
+    CXXFLAGS += -O3
+    OUTPUTDIR = bin/release
+endif
 
-main: main.o calculator.o shapes.o
+all: $(OUTPUTDIR) $(OUTPUTDIR)/main
+
+$(OUTPUTDIR):
+	mkdir -p $(OUTPUTDIR)
+
+$(OUTPUTDIR)/main: $(OUTPUTDIR)/main.o $(OUTPUTDIR)/calculator.o $(OUTPUTDIR)/shapes.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-main.o: main.c calculator.h shapes.h
-	$(CC) $(CFLAGS) -c $<
+$(OUTPUTDIR)/main.o: main.c calculator.h shapes.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
-calculator.o: calculator.c calculator.h
-	$(CC) $(CFLAGS) -c $<
+$(OUTPUTDIR)/calculator.o: calculator.c calculator.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
-shapes.o: shapes.c shapes.h
-	$(CC) $(CFLAGS) -c $<
+$(OUTPUTDIR)/shapes.o: shapes.c shapes.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
-shapesTests.o: shapesTests.cpp shapes.h
-	$(CXX) $(CXXFLAGS) -c $<
+$(OUTPUTDIR)/shapesTests.o: shapesTests.cpp shapes.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-calculatorTests.o: calculatorTests.cpp calculator.h
-	$(CXX) $(CXXFLAGS) -c $<
+$(OUTPUTDIR)/calculatorTests.o: calculatorTests.cpp calculator.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-shapesTests: shapesTests.o shapes.o
+$(OUTPUTDIR)/shapesTests: $(OUTPUTDIR)/shapesTests.o $(OUTPUTDIR)/shapes.o
 	$(CXX) -o $@ $^ $(GTEST_LIB) $(LDFLAGS)
 
-calculatorTests: calculatorTests.o calculator.o
+$(OUTPUTDIR)/calculatorTests: $(OUTPUTDIR)/calculatorTests.o $(OUTPUTDIR)/calculator.o
 	$(CXX) -o $@ $^ $(GTEST_LIB)
 
-test: shapesTests calculatorTests
-	./shapesTests
-	./calculatorTests
+test: $(OUTPUTDIR)/shapesTests $(OUTPUTDIR)/calculatorTests
+	$(OUTPUTDIR)/shapesTests
+	$(OUTPUTDIR)/calculatorTests
 
 clean:
-	rm -f *.o main shapesTests calculatorTests
+	rm -rf bin
