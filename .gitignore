@@ -1,7 +1,17 @@
-/.vscode
-/calculator.o
-/calculatorTests.o
-/main.exe
-/main.o
-/shapes.o
-/shapesTests.o
+# Build artifacts
+bin/
+build/
+*.o
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+
+# IDE and editor files
+.vscode/
+*.vscode/
+*.code-workspace
+*.cproject
+*.project
+
