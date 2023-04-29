@@ -149,7 +149,7 @@ void calculator_menu() {
             if ((int)b == 0) {
                 printf("Error: Division by zero is not allowed.\n");
             } else {
-            printf("Result: %d\n", mod((int)a, (int)b));
+            printf("Result: %d\n", (int) a% (int)b);
             }
         } else {
             printf("Invalid operator. Please try again.\n");

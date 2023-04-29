@@ -18,12 +18,12 @@ else
     OUTPUTDIR = bin/release
 endif
 
-all: $(OUTPUTDIR) $(OUTPUTDIR)/main
+all: main.exe $(OUTPUTDIR)
 
 $(OUTPUTDIR):
-	mkdir -p $(OUTPUTDIR)
+	@mkdir "$(OUTPUTDIR)"
 
-$(OUTPUTDIR)/main: $(OUTPUTDIR)/main.o $(OUTPUTDIR)/calculator.o $(OUTPUTDIR)/shapes.o
+main.exe: $(OUTPUTDIR)/main.o $(OUTPUTDIR)/calculator.o $(OUTPUTDIR)/shapes.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 $(OUTPUTDIR)/main.o: main.c calculator.h shapes.h
