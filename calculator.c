@@ -18,5 +18,5 @@ double divide(double a, double b) {
 }
 
 double modulus(double a, double b) {
-    return fmod(a, b);
+    return fmod(a, b); // modulus on floating numbers
 }

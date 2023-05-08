@@ -1,29 +1,26 @@
+#include <ctype.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <ctype.h> 
+#include <string.h>
+#include <math.h>
+
 #include "shapes.h"
 #include "calculator.h"
 
-void shapes_menu();
-void calculator_menu();
-void main_menu();
-void to_lower(char *str); 
-void flush_input(); // Declare the flush_input() function to Clear input buffer later..
 
-int main() {
-    main_menu();
-    return 0;
-}
+void shapesMenu();
+void calculatorMenu();
 
-void to_lower(char *str) {
+// A helper function to convert a string to lowercase
+void to_lower_string(char *str) {
     for (int i = 0; str[i]; i++) {
         str[i] = tolower(str[i]);
     }
 }
 
-void main_menu() {
-    char choice[20];
+int main() {
+    int choice;
+    char input[100];
 
     while (1) {
         printf("\nWelcome! Choose an option:\n");
@@ -31,24 +28,36 @@ void main_menu() {
         printf("2. Calculator\n");
         printf("3. Exit\n");
         printf("Enter your choice: ");
-        fgets(choice, sizeof(choice), stdin);
-        choice[strcspn(choice, "\n")] = '\0';
-        to_lower(choice); 
+        fgets(input, sizeof(input), stdin);
+        to_lower_string(input);
 
-        if (strcmp(choice, "shapes") == 0 || strcmp(choice, "1") == 0) {
-            shapes_menu();
-        } else if (strcmp(choice, "calculator") == 0 || strcmp(choice, "2") == 0) {
-            calculator_menu();
-        } else if (strcmp(choice, "exit") == 0 || strcmp(choice, "3") == 0) {
-            printf("Now exiting...\n");
-            break;
+        if (strstr(input, "shapes") || strstr(input, "shaps") || strcmp(input, "1\n") == 0) {
+            choice = 1;
+        } else if (strstr(input, "calculator") || strstr(input, "calculatr") || strcmp(input, "2\n") == 0) {
+            choice = 2;
+        } else if (strstr(input, "exit") || strcmp(input, "3\n") == 0) {
+            choice = 3;
         } else {
-            printf("Invalid choice. Please try again.\n");
+            choice = -1;
+        }
+
+        switch (choice) {
+            case 1:
+                shapesMenu();
+                break;
+            case 2:
+                calculatorMenu();
+                break;
+            case 3:
+                printf("Goodbye!\n");
+                return 0;
+            default:
+                printf("Invalid choice. Please try again.\n");
         }
     }
 }
 
-void shapes_menu() {
+void shapesMenu() {
     char shape[20];
     double height, width, base, side, side1, side2, side3, radius;
     int input_check;
@@ -62,7 +71,7 @@ void shapes_menu() {
         printf("Enter your choice: ");
         fgets(shape, sizeof(shape), stdin);
         shape[strcspn(shape, "\n")] = '\0';
-        to_lower(shape); 
+        shape[0] = tolower(shape[0]);
 
         if (strcmp(shape, "back") == 0) {
             break;
@@ -111,54 +120,56 @@ void shapes_menu() {
             printf("Invalid choice. Please try again.\n");
         }
        
-        flush_input();
+        while ((getchar()) != '\n');
     }
 }
 
-void calculator_menu() {
-    char input[50], operator[2];
-    double a, b;
-    int input_check;
+void calculatorMenu() {
+    double a, b, result;
+    char operator;
+    char input[100];
+    int ret;
+
     while (1) {
         printf("\nEnter two numbers and an operator (+, -, *, /, %%) separated by space, or type 'back' to return to the main menu: ");
         fgets(input, sizeof(input), stdin);
-        input[strcspn(input, "\n")] = '\0';
 
-        if (strcmp(input, "back") == 0) {
-            break;
+        if (strncmp(input, "back", 4) == 0) {
+            return;
         }
 
-        input_check = sscanf(input, "%lf %lf %s", &a, &b, operator);
+        ret = sscanf(input, "%lf %lf %c", &a, &b, &operator);
 
-        if (input_check != 3) {
+        if (ret != 3) {
             printf("Invalid input. Please try again.\n");
-        } else if (strcmp(operator, "+") == 0) {
-            printf("Result: %.2lf\n", add(a, b));
-        } else if (strcmp(operator, "-") == 0) {
-            printf("Result: %.2lf\n", subtract(a, b));
-        } else if (strcmp(operator, "*") == 0) {
-            printf("Result: %.2lf\n", multiply(a, b));
-        } else if (strcmp(operator, "/") == 0) {
-            if (b == 0) {
-                printf(" Division by zero does not work. \n");
-            } else {
-                printf("Result: %.2lf\n", divide(a, b));
-            }
-        } else if (strcmp(operator, "%%") == 0) {
-            if ((int)b == 0) {
-                printf("Division by zero does not work\n");
-            } else {
-            printf("Result: %d\n", (int) a% (int)b);
-            }
-        } else {
-            printf("Invalid operator. Please try again.\n");
+            continue;
         }
+
+        switch (operator) {
+            case '+':
+                result = add(a, b);
+                break;
+            case '-':
+                result = subtract(a, b);
+                break;
+            case '*':
+                result = multiply(a, b);
+                break;
+            case '/':
+                if (b == 0) {
+                    printf("Division by zero is not allowed. Please try again.\n");
+                    continue;
+                }
+                result = divide(a, b);
+                break;
+            case '%':
+                result = modulus(a, b);
+                break;
+            default:
+                printf("Invalid operator. Please try again.\n");
+                continue;
+        }
+
+        printf("Result: %.2lf\n", result);
     }
 }
-
-// This function clears the input buffer
-void flush_input() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
-   

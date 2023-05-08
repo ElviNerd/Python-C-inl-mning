@@ -45,7 +45,7 @@ $(OUTPUTDIR)/shapesTests: $(OUTPUTDIR)/shapesTests.o $(OUTPUTDIR)/shapes.o
 	$(CXX) -o $@ $^ $(GTEST_LIB) $(LDFLAGS)
 
 $(OUTPUTDIR)/calculatorTests: $(OUTPUTDIR)/calculatorTests.o $(OUTPUTDIR)/calculator.o
-	$(CXX) -o $@ $^ $(GTEST_LIB)
+	$(CXX) -o $@ $^ $(GTEST_LIB) $(LDFLAGS)
 
 test: $(OUTPUTDIR)/shapesTests $(OUTPUTDIR)/calculatorTests
 	$(OUTPUTDIR)/shapesTests
