@@ -1,7 +1,7 @@
 CC = gcc
 CXX = g++
 
-CFLAGS=-Wall -Werror
+CFLAGS = -Wall -Werror
 CXXFLAGS = -std=c++20 -Wall -Wextra
 LDFLAGS = -lm
 

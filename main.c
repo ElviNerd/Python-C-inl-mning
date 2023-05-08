@@ -1,22 +1,21 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <ctype.h> // Include ctype.h for the tolower() function
+#include <ctype.h> 
 #include "shapes.h"
 #include "calculator.h"
 
 void shapes_menu();
 void calculator_menu();
 void main_menu();
-void to_lower(char *str); // Declare the to_lower() function
-void flush_input(); // Declare the flush_input() function
+void to_lower(char *str); 
+void flush_input(); // Declare the flush_input() function to Clear input buffer later..
 
 int main() {
     main_menu();
     return 0;
 }
 
-// Helper function to convert a string to lowercase
 void to_lower(char *str) {
     for (int i = 0; str[i]; i++) {
         str[i] = tolower(str[i]);
@@ -34,14 +33,14 @@ void main_menu() {
         printf("Enter your choice: ");
         fgets(choice, sizeof(choice), stdin);
         choice[strcspn(choice, "\n")] = '\0';
-        to_lower(choice); // Convert the input to lowercase
+        to_lower(choice); 
 
         if (strcmp(choice, "shapes") == 0 || strcmp(choice, "1") == 0) {
             shapes_menu();
         } else if (strcmp(choice, "calculator") == 0 || strcmp(choice, "2") == 0) {
             calculator_menu();
         } else if (strcmp(choice, "exit") == 0 || strcmp(choice, "3") == 0) {
-            printf("Exiting...\n");
+            printf("Now exiting...\n");
             break;
         } else {
             printf("Invalid choice. Please try again.\n");
@@ -63,7 +62,7 @@ void shapes_menu() {
         printf("Enter your choice: ");
         fgets(shape, sizeof(shape), stdin);
         shape[strcspn(shape, "\n")] = '\0';
-        to_lower(shape); // Convert the input to lowercase
+        to_lower(shape); 
 
         if (strcmp(shape, "back") == 0) {
             break;
@@ -73,10 +72,10 @@ void shapes_menu() {
             printf("Enter height and width separated by space: ");
             input_check = scanf("%lf %lf", &height, &width);
             if (input_check != 2 || height <= 0 || width <= 0) {
-                printf("Invalid input. Please try again.\n");
+                printf("Sorry. Invalid input. Please try again.\n");
             } else {
-                printf("Area: %.2lf\n", rectangle_area(height, width));
-                printf("Perimeter: %.2lf\n", rectangle_perimeter(height, width));
+                printf("Area or your shape is: %.2lf\n", rectangle_area(height, width));
+                printf("Perimeter is: %.2lf\n", rectangle_perimeter(height, width));
             }
         } else if (strcmp(shape, "parallelogram") == 0) {
             printf("Enter base, height, and side separated by space: ");
@@ -111,7 +110,7 @@ void shapes_menu() {
         } else {
             printf("Invalid choice. Please try again.\n");
         }
-        // Clear input buffer
+       
         flush_input();
     }
 }
@@ -141,13 +140,13 @@ void calculator_menu() {
             printf("Result: %.2lf\n", multiply(a, b));
         } else if (strcmp(operator, "/") == 0) {
             if (b == 0) {
-                printf("Error: Division by zero is not allowed.\n");
+                printf(" Division by zero does not work. \n");
             } else {
                 printf("Result: %.2lf\n", divide(a, b));
             }
         } else if (strcmp(operator, "%%") == 0) {
             if ((int)b == 0) {
-                printf("Error: Division by zero is not allowed.\n");
+                printf("Division by zero does not work\n");
             } else {
             printf("Result: %d\n", (int) a% (int)b);
             }
